@@ -1,8 +1,9 @@
+import re
 from flask import Flask, render_template, request, flash, redirect, url_for
 from sqlalchemy import create_engine
 from flask_login import login_user, logout_user, current_user, login_required,\
     LoginManager
-from forms import SearchForm, MovieEntryForm
+from forms import SearchForm, MovieEntryForm, PersonEntryForm
 
 app = Flask(__name__)
 app.secret_key = 'cse305'
@@ -79,6 +80,46 @@ def enter_movie():
         flash('Movie information successfully entered.')
         return redirect(url_for('main'))
     return render_template('enter_movie.html', form=form)
+
+@app.route('/enter_person', methods=['GET', 'POST'])
+def enter_person():
+    form = PersonEntryForm(request.form)
+    if request.method == 'POST' and form.validate():
+        name = form.name.data
+        date_of_birth = form.date_of_birth.data if form.date_of_birth.data \
+            else 'NULL'
+        nationalityString = form.nationality.data
+        nationalities = re.split(', |,',nationalityString)
+        awardString= form.award.data
+        awards = re.split(', |,',awardString)
+        jobs = form.job.data
+        connection = engine.connect()
+        # insert movie info into Movie table
+        result = connection.execute("INSERT INTO Person(Id, dateofbirth, name)" \
+                           "VALUES (DEFAULT, '{}', '{}')" \
+                           "RETURNING Id".
+                           format(date_of_birth, name))
+        id_val = result.fetchone()[0]
+        # insert nation into PersonNationality table
+        for nationality in nationalities:
+            connection.execute("INSERT INTO PersonNationality(Id, nationality)"\
+                                "VALUES ({},'{}')".format(id_val, nationality))
+        for award in awards:
+            connection.execute("INSERT INTO PersonAward(Id, award)"\
+                                "VALUES ({},'{}')".format(id_val, award))
+
+        # insert into actor/director/producer table
+        print(jobs);
+        for job in jobs:
+            if job == 'Actor':
+                connection.execute("INSERT INTO actor(id) VALUES({})".format(id_val))
+            if job == 'Director':
+                connection.execute("INSERT INTO director(id) VALUES({})".format(id_val))
+            if job == 'Producer':
+                connection.execute("INSERT INTO producer(id) VALUES({})".format(id_val))
+        flash('Person information successfully entered.')
+        return redirect(url_for('main'))
+    return render_template('enter_person.html', form=form)
 
 @app.route('/movie/<id_val>')
 def show_movie_info(id_val):

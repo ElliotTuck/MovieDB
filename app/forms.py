@@ -28,7 +28,12 @@ class MovieEntryForm(Form):
                                           ('Thriller','Thriller')])
 
 class PersonEntryForm(Form):
-   name = StringField('Name', [validators.DataRequired()])
-   person_id = IntegerField('Person ID',[validators.DataRequired()])
-   date_of_birth = DateField('Release Date', [validators.Optional()])
-   
+    name = StringField('Name', [validators.DataRequired()])
+    date_of_birth = DateField('Date of Birth', [validators.DataRequired()])
+    nationality = StringField('Nationality',[validators.Optional()])
+    award = StringField('Award',[validators.Optional()])
+    job = SelectMultipleField('Known for', [validators.Optional()],
+                                 choices=[('Actor','Actor'),
+                                          ('Director','Director'),
+                                          ('Producer','Producer')])
+     
