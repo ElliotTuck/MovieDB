@@ -3,7 +3,10 @@ from wtforms import Form, StringField, IntegerField, TextAreaField,\
 from wtforms.fields.html5 import DateField
 
 class SearchForm(Form):
-    searchbar = StringField('Search Movies', [validators.DataRequired()])
+    searchbar = StringField('Search Key word:', [validators.DataRequired()])
+    searchtype = RadioField('Type:', [validators.DataRequired()],
+                             choices=[('movie','movie'), ('actor','actor'),
+                                      ('director','director'), ('producer','producer')])
 
 class MovieEntryForm(Form):
     name = StringField('Name', [validators.DataRequired()])
@@ -23,3 +26,9 @@ class MovieEntryForm(Form):
                                           ('Drama','Drama'),
                                           ('Action','Action'),
                                           ('Thriller','Thriller')])
+
+class PersonEntryForm(Form):
+   name = StringField('Name', [validators.DataRequired()])
+   person_id = IntegerField('Person ID',[validators.DataRequired()])
+   date_of_birth = DateField('Release Date', [validators.Optional()])
+   

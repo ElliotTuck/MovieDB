@@ -16,15 +16,27 @@ def main():
     form = SearchForm(request.form)
     if request.method == 'POST' and form.validate():
         search_string = form.searchbar.data
+        search_type = form.searchtype.data if form.searchtype.data != 'None' \
+            else 'NULL'
+
         connection = engine.connect()
-        query = "SELECT * FROM Movie WHERE LOWER(Name) LIKE '%%{}%%'".format(
-            search_string.lower())
-        result = connection.execute(query)
-        movie_listing = []
-        for row in result:
-            movie_listing.append((row.id, row.name.strip()))
-        return render_template('search_results.html',
-                               movie_listing=movie_listing)
+        if search_type=='movie':
+            query = "SELECT * FROM Movie WHERE LOWER(Name) LIKE '%%{}%%'".format(
+                search_string.lower())
+            result = connection.execute(query)
+            movie_listing = []
+            for row in result:
+                movie_listing.append((row.id, row.name.strip()))
+            return render_template('search_results.html',
+                                   movie_listing=movie_listing)
+        # elif search_type=='actor':
+
+        # elif search_type=='director':
+
+        # elif search_type=='producer':
+
+        # else:
+
     return render_template("index.html", form=form)
 
 @app.route('/enter_movie', methods=['GET', 'POST'])
