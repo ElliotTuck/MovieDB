@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ person_info.name }}</h1>
+<h3>Date of birth: {{ person_info.date_of_birth}}</h3>
+{% if movie_info.budget != None %}
+<h4>Budget: ${{ movie_info.budget }}</h4>
+{% else %}
+<h4>Budget: Unknown</h4>
+{% endif %}
+{% endblock %}
