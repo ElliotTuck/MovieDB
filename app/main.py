@@ -28,8 +28,16 @@ def main():
                 movie_listing.append((row.id, row.name.strip()))
             return render_template('search_results.html',
                                    movie_listing=movie_listing)
-        # elif search_type=='actor':
-
+         elif search_type=='actor':
+            query = "SELECT person.id, person.name From person, actor where actor.id in (SELECT id FROM Person WHERE LOWER(Name) LIKE '%%{}%%')".format(
+                search_string.lower())
+            result = connection.execute(query)
+            print(result.fetchone())
+            actor_listing = []
+            for row in result:
+                actor_listing.append((row.id, row.name.strip()))
+            return render_template('search_person.html',
+                                    person_listing = actor_listing)
         # elif search_type=='director':
 
         # elif search_type=='producer':
@@ -97,3 +105,10 @@ def show_movie_info(id_val):
         id_val))
     movie_info = result.fetchone()
     return render_template('movie_info.html', movie_info=movie_info)
+
+@app.route('/person/<id_val>')
+def show_person_info(id_val):
+    connection = engine.connect()
+    result = connection.execute('SELECT * FROM Person WHERE Id = {}'.format(id_val))
+    person_info = result.fetchone()
+    return render_template('person_info', person_info=person_info)
