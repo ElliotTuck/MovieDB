@@ -22,6 +22,12 @@ def insert_movie(db, name, release_date, duration, description, budget,
             id_val, genre)
         db.execute(query)
 
+def person_like(db, search_str, role):
+    query = "SELECT person.id, person.name From person, {} where {}.id = person.id AND LOWER(person.Name) LIKE '%%{}%%'".format(role,role,
+                search_str.lower())
+    result_set = db.execute(query)
+    return result_set
+
 def get_user(db, username):
     query = "SELECT * FROM UserAccount WHERE Username = '{}'".format(username)
     result_set = db.execute(query)

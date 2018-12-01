@@ -30,21 +30,13 @@ def index():
                 movie_listing.append((row.id, row.name.strip()))
             return render_template('search_results.html',
                                    movie_listing=movie_listing)
-        elif search_type=='actor':
-            query = "SELECT person.id, person.name From person, actor where actor.id in (SELECT id FROM Person WHERE LOWER(Name) LIKE '%%{}%%')".format(
-                search_string.lower())
-            result = connection.execute(query)
-            print(result.fetchone())
+        else:
+            result = person_like(db,search_string,search_type)
             actor_listing = []
             for row in result:
                 actor_listing.append((row.id, row.name.strip()))
             return render_template('search_person.html',
                                     person_listing = actor_listing)
-        # elif search_type=='director':
-
-        # elif search_type=='producer':
-
-        # else:
 
     username = ''
     if current_user.is_authenticated:
