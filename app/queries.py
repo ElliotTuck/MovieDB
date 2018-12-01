@@ -21,3 +21,13 @@ def insert_movie(db, name, release_date, duration, description, budget,
         query = "INSERT INTO MovieGenre(Id, Genre) VALUES ({}, '{}')".format(
             id_val, genre)
         db.execute(query)
+
+def get_user(db, username):
+    query = "SELECT * FROM UserAccount WHERE Username = '{}'".format(username)
+    result_set = db.execute(query)
+    return result_set.first()
+
+def register_user(db, username, password):
+    query = "INSERT INTO UserAccount(Username, Password) VALUES ('{}', " \
+        "'{}')".format(username, password)
+    db.execute(query)

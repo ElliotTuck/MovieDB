@@ -3,24 +3,26 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 from sqlalchemy import create_engine
 from flask_login import login_user, logout_user, current_user, login_required,\
     LoginManager
-from forms import SearchForm, MovieEntryForm, PersonEntryForm
+from forms import SearchForm, MovieEntryForm, PersonEntryForm, LoginForm, \
+    RegisterForm
 from queries import * 
+from models import User
 
 app = Flask(__name__)
 app.secret_key = 'cse305'
 db = create_engine('postgresql://Elliot:password@moviedb.ch3vwlfnxu62.us-west-2.rds.amazonaws.com:5432/moviedb')
-login = LoginManager(app)
-login.login_view = 'login'
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
-def main():
+def index():
     form = SearchForm(request.form)
     if request.method == 'POST' and form.validate():
         search_string = form.searchbar.data
         search_type = form.searchtype.data if form.searchtype.data != 'None' \
             else 'NULL'
-
         if search_type=='movie':
             result_set = movies_like(db, search_string)
             movie_listing = []
@@ -28,7 +30,7 @@ def main():
                 movie_listing.append((row.id, row.name.strip()))
             return render_template('search_results.html',
                                    movie_listing=movie_listing)
-         elif search_type=='actor':
+        elif search_type=='actor':
             query = "SELECT person.id, person.name From person, actor where actor.id in (SELECT id FROM Person WHERE LOWER(Name) LIKE '%%{}%%')".format(
                 search_string.lower())
             result = connection.execute(query)
@@ -55,7 +57,7 @@ def enter_movie():
                      form.duration.data, form.description.data,
                      form.budget.data, form.mpaa_rating.data, form.genres.data)
         flash('Movie information successfully entered.')
-        return redirect(url_for('main'))
+        return redirect(url_for('index'))
     return render_template('enter_movie.html', form=form)
 
 @app.route('/enter_person', methods=['GET', 'POST'])
@@ -95,7 +97,7 @@ def enter_person():
             if job == 'Producer':
                 connection.execute("INSERT INTO producer(id) VALUES({})".format(id_val))
         flash('Person information successfully entered.')
-        return redirect(url_for('main'))
+        return redirect(url_for('index'))
     return render_template('enter_person.html', form=form)
 
 @app.route('/movie/<id_val>')
@@ -112,3 +114,41 @@ def show_person_info(id_val):
     result = connection.execute('SELECT * FROM Person WHERE Id = {}'.format(id_val))
     person_info = result.fetchone()
     return render_template('person_info', person_info=person_info)
+
+@login_manager.user_loader
+def load_user(id):
+    registered_user = get_user(db, id)
+    username = registered_user.username
+    password = registered_user.password
+    return User(username, password)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm(request.form)
+    if request.method == 'GET':
+        return render_template('register.html', form=form)
+    if request.method == 'POST' and form.validate():
+        registered_user = get_user(db, form.username.data)
+        if registered_user is not None:
+            flash('User with that username already exists')
+            return redirect(url_for('register'))
+        register_user(db, form.username.data, form.password.data)
+        flash('User successfully registered')
+    return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm(request.form)
+    if request.method == 'GET':
+        return render_template('login.html', form=form)
+    if request.method == 'POST' and form.validate():
+        registered_user = get_user(db, form.username.data)
+        if registered_user is None or form.password.data != registered_user.password.strip():
+            flash('Username or password is invalid', 'error')
+            return redirect(url_for('login'))
+        registered_user = User(registered_user.username,
+                               registered_user.password)
+        login_user(registered_user)
+        flash('Logged in successfully')
+        return redirect(request.args.get('next') or url_for('index'))
+    return redirect(url_for('index'))

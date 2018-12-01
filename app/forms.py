@@ -1,5 +1,5 @@
 from wtforms import Form, StringField, IntegerField, TextAreaField,\
-    RadioField, SelectMultipleField, validators
+    RadioField, SelectMultipleField, PasswordField, validators
 from wtforms.fields.html5 import DateField
 
 class SearchForm(Form):
@@ -36,4 +36,19 @@ class PersonEntryForm(Form):
                                  choices=[('Actor','Actor'),
                                           ('Director','Director'),
                                           ('Producer','Producer')])
-     
+
+class LoginForm(Form):
+    username = StringField('Username', [validators.DataRequired(),
+                                        validators.Length(min=1,max=100)])
+    password = PasswordField('Password', [validators.DataRequired(),
+                                          validators.Length(min=1,max=50)])
+
+class RegisterForm(Form):
+    username = StringField('Username', [validators.DataRequired(),
+                                        validators.Length(min=1,max=100)])
+    password = PasswordField('Password', [validators.DataRequired(),
+                                          validators.Length(min=1,max=50)])
+    password2 = PasswordField('Enter Password Again',
+                              [validators.DataRequired(),
+                               validators.Length(min=1,max=50),
+                               validators.EqualTo('password', message='Passwords must match')])
