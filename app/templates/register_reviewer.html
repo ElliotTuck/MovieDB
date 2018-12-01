@@ -1,0 +1,15 @@
+{% from "_formhelpers.html" import render_field %}
+{% extends "base.html" %}
+{% block content %}
+<form method=post>
+    <dl>
+        {{ render_field(form.name) }}
+        {{ render_field(form.username) }}
+        {{ render_field(form.location) }}
+        {{ render_field(form.organization) }}
+        {{ render_field(form.password) }}
+        {{ render_field(form.password2) }}
+    </dl>
+    <input type=submit>
+</form>
+{% endblock %}
