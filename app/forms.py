@@ -43,7 +43,7 @@ class LoginForm(Form):
     password = PasswordField('Password', [validators.DataRequired(),
                                           validators.Length(min=1,max=50)])
 
-class RegisterAudienceMemberForm(Form):
+class RegisterUserForm(Form):
     username = StringField('Username', [validators.DataRequired(),
                                         validators.Length(min=1,max=100)])
     password = PasswordField('Password', [validators.DataRequired(),
@@ -53,3 +53,12 @@ class RegisterAudienceMemberForm(Form):
                                validators.Length(min=1,max=50),
                                validators.EqualTo('password',
                                                   message='Passwords must match')])
+
+class RegisterAudienceMemberForm(RegisterUserForm):
+    pass
+
+class RegisterReviewerForm(RegisterUserForm):
+    name = StringField('Full Name', [validators.DataRequired(),
+                                     validators.Length(max=100)])
+    location = StringField('Location', [validators.Length(max=200)])
+    organization = StringField('Organization', [validators.Length(max=256)])

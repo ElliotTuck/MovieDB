@@ -37,3 +37,12 @@ def add_audience_member(db, username, password):
     query = "INSERT INTO AudienceMember(Username, Since, Status) VALUES " \
         "('{}', DEFAULT, 'None')".format(username)
     db.execute(query)
+
+def add_reviewer(db, username, password, name, location, organization):
+    add_user(db, username, password)
+    location = "'" + location + "'" if location != '' else 'NULL'
+    organization = "'" + organization + "'" if organization != '' else 'NULL'
+    query = "INSERT INTO Reviewer(Username, Name, Location, Organization, " \
+        "CriticalScore) VALUES ('{}', '{}', {}, {}, 100)".format(
+            username, name, location, organization)
+    db.execute(query)

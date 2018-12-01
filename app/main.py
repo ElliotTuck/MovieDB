@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from flask_login import login_user, logout_user, current_user, login_required,\
     LoginManager
 from forms import SearchForm, MovieEntryForm, PersonEntryForm, LoginForm, \
-    RegisterAudienceMemberForm
+    RegisterAudienceMemberForm, RegisterReviewerForm
 from queries import * 
 from models import User
 
@@ -143,6 +143,23 @@ def register_audience_member():
         flash('User successfully registered')
         return redirect(request.args.get('next') or url_for('index'))
     return render_template('register_audience_member.html', form=form) 
+
+@app.route('/register_reviewer', methods=['GET', 'POST'])
+def register_reviewer():
+    form = RegisterReviewerForm(request.form)
+    if request.method == 'GET':
+        return render_template('register_reviewer.html', form=form)
+    if request.method == 'POST' and form.validate():
+        registered_user = get_user(db, form.username.data)
+        if registered_user is not None:
+            flash('User with that username already exists')
+            return redirect(url_for('register_reviewer.html'))
+        add_reviewer(db, form.username.data, form.password.data,
+                     form.name.data, form.location.data,
+                     form.organization.data)
+        flash('User successfully registered')
+        return redirect(request.args.get('next') or url_for('index'))
+    return render_template('register_reviewer.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
