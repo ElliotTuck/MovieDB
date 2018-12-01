@@ -4,8 +4,20 @@
 <h1>{{ movie_info.name }}</h1>
 <h3>Description: {{ movie_info.description }}</h3>
 <h4 class="text-secondary">Release Date: {{ movie_info.releasedate }}</h4>
-<h4 class="text-secondary">Duration: {{ movie_info.duration }} min.</h4>
-<h4 class="text-secondary">MPAA Rating: {{ movie_info.mpaarating }}</h4>
+<h4 class="text-secondary">Duration:
+    {% if movie_info.duration %}
+    {{ movie_info.duration }} min.
+    {% else %}
+    Unknown
+    {% endif %}
+</h4>
+<h4 class="text-secondary">MPAA Rating:
+    {% if movie_info.mpaarating %}
+    {{ movie_info.mpaarating }}
+    {% else %}
+    Unknown
+    {% endif %}
+</h4>
 {% if movie_info.budget != None %}
 <h4 class="text-secondary">Budget: ${{ movie_info.budget }}</h4>
 {% else %}
