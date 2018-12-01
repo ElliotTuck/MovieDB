@@ -112,8 +112,6 @@ def show_movie_info(id_val):
     reviewer_ratings = get_reviewer_ratings(db, id_val)
     count = 0
     sum = 0
-    grade_values = {'A+':13, 'A':12, 'A-':11, 'B+':10, 'B':9, 'B-':8, 'C+':7,
-                    'C':6, 'C-':5, 'D+':4, 'D':3, 'D-':2, 'F':1}
     grade_values_inv = {v: k for k, v in grade_values.items()}
     for reviewer_rating in reviewer_ratings:
         rating = reviewer_rating.rating.strip()
@@ -212,3 +210,8 @@ def review(id_val):
         flash('Review successfully entered.')
         return redirect(url_for('show_movie_info',id_val= id_val))
     return render_template('Review_page.html', form=form)
+
+@app.route('/highest_rated_movie')
+def highest_rated_movie():
+    movie_id = get_highest_rated_movie(db)
+    return redirect(url_for('show_movie_info', id_val=movie_id))
