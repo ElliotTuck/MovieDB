@@ -70,6 +70,8 @@ def get_movie_reviews(db, movie_id):
     return result_set
 
 def add_review(db, movieid, reviewerid, reviewtime, review, rating):
-    query = "INSERT INTO Review (movieid, reviewerid, reviewtime, review, rating) 
-            VALUES({},'{}',{},'{}','{}')".format(movieid, reviewerid, reviewtime, review, rating)
+    query = "INSERT INTO Review (movieid, reviewerid, reviewtime, review, " \
+        "rating) VALUES({},'{}','{}','{}','{}')".format(movieid, reviewerid,
+                                                      reviewtime, review,
+                                                      rating)
     db.execute(query)
