@@ -111,4 +111,11 @@ def get_highest_rated_movie(db):
             highest_id = movie_id
     return highest_id
 
+def get_most_reviewed_movie(db):
+    query = "SELECT MovieId, COUNT(*) AS ReviewCount FROM Review GROUP BY " \
+        "MovieId ORDER BY ReviewCount DESC"
+    result_set = db.execute(query)
+    movie_id = result_set.first().movieid
+    return movie_id
+
 

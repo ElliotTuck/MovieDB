@@ -215,3 +215,8 @@ def review(id_val):
 def highest_rated_movie():
     movie_id = get_highest_rated_movie(db)
     return redirect(url_for('show_movie_info', id_val=movie_id))
+
+@app.route('/most_reviewed_movie')
+def most_reviewed_movie():
+    movie_id = get_most_reviewed_movie(db)
+    return redirect(url_for('show_movie_info', id_val=movie_id))
