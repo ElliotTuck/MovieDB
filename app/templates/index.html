@@ -1,5 +1,12 @@
 {% from "_formhelpers.html" import render_field %}
 {% extends "base.html" %}
+{% block nav_buttons_right %}
+{% if logged_in %}
+<a class="nav-item nav-link" href={{ url_for('logout') }}>Logout</a>
+{% else %}
+<a class="nav-item nav-link" href={{ url_for('login') }}>Login</a>
+{% endif %}
+{% endblock %}
 {% block content %}
 <form method=post>
 	<dl>

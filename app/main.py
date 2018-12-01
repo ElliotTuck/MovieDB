@@ -40,10 +40,12 @@ def index():
                                     person_listing = actor_listing)
 
     username = ''
+    logged_in = False
     if current_user.is_authenticated:
+        logged_in = True
         username = current_user.get_id()
         flash('Hello, {}!'.format(username))
-    return render_template("index.html", form=form)
+    return render_template("index.html", form=form, logged_in=logged_in)
 
 @app.route('/enter_movie', methods=['GET', 'POST'])
 @login_required
