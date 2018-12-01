@@ -153,7 +153,7 @@ def register_reviewer():
         registered_user = get_user(db, form.username.data)
         if registered_user is not None:
             flash('User with that username already exists')
-            return redirect(url_for('register_reviewer.html'))
+            return redirect(url_for('register_reviewer'))
         add_reviewer(db, form.username.data, form.password.data,
                      form.name.data, form.location.data,
                      form.organization.data)
