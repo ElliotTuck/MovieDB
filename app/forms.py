@@ -43,7 +43,7 @@ class LoginForm(Form):
     password = PasswordField('Password', [validators.DataRequired(),
                                           validators.Length(min=1,max=50)])
 
-class RegisterForm(Form):
+class RegisterAudienceMemberForm(Form):
     username = StringField('Username', [validators.DataRequired(),
                                         validators.Length(min=1,max=100)])
     password = PasswordField('Password', [validators.DataRequired(),

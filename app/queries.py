@@ -27,7 +27,13 @@ def get_user(db, username):
     result_set = db.execute(query)
     return result_set.first()
 
-def register_user(db, username, password):
+def add_user(db, username, password):
     query = "INSERT INTO UserAccount(Username, Password) VALUES ('{}', " \
         "'{}')".format(username, password)
+    db.execute(query)
+
+def add_audience_member(db, username, password):
+    add_user(db, username, password)
+    query = "INSERT INTO AudienceMember(Username, Since, Status) VALUES " \
+        "('{}', DEFAULT, 'None')".format(username)
     db.execute(query)

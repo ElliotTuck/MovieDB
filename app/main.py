@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from flask_login import login_user, logout_user, current_user, login_required,\
     LoginManager
 from forms import SearchForm, MovieEntryForm, PersonEntryForm, LoginForm, \
-    RegisterForm
+    RegisterAudienceMemberForm
 from queries import * 
 from models import User
 
@@ -46,6 +46,10 @@ def index():
 
         # else:
 
+    username = ''
+    if current_user.is_authenticated:
+        username = current_user.get_id()
+        flash('Hello, {}!'.format(username))
     return render_template("index.html", form=form)
 
 @app.route('/enter_movie', methods=['GET', 'POST'])
@@ -120,24 +124,25 @@ def show_person_info(id_val):
 def load_user(id):
     registered_user = get_user(db, id)
     if registered_user != None:
-        username = registered_user.username
-        password = registered_user.password
+        username = registered_user.username.strip()
+        password = registered_user.password.strip()
         return User(username, password)
     return None
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegisterForm(request.form)
+@app.route('/register_audience_member', methods=['GET', 'POST'])
+def register_audience_member():
+    form = RegisterAudienceMemberForm(request.form)
     if request.method == 'GET':
-        return render_template('register.html', form=form)
+        return render_template('register_audience_member.html', form=form)
     if request.method == 'POST' and form.validate():
         registered_user = get_user(db, form.username.data)
         if registered_user is not None:
             flash('User with that username already exists')
-            return redirect(url_for('register'))
-        register_user(db, form.username.data, form.password.data)
+            return redirect(url_for('register_audience_member'))
+        add_audience_member(db, form.username.data, form.password.data)
         flash('User successfully registered')
-    return render_template('register.html', form=form) 
+        return redirect(request.args.get('next') or url_for('index'))
+    return render_template('register_audience_member.html', form=form) 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
