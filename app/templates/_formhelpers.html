@@ -18,6 +18,12 @@
                 <p>"{{ review.review }}"</p>
                 <footer class="blockquote-footer">
                     {{ review.name }}
+                    {% if review.location %}
+                    , {{ review.location }}
+                    {% endif %}
+                    {% if review.organization %}
+                    , {{ review.organization }}
+                    {% endif %}
                 </footer>
             </blockquote>
         </div>

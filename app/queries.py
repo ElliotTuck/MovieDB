@@ -70,8 +70,10 @@ def get_movie_reviews(db, movie_id):
     return result_set
 
 def add_review(db, movieid, reviewerid, reviewtime, review, rating):
+    escaped_review = review.translate(str.maketrans({"'": r"''"}))
     query = "INSERT INTO Review (movieid, reviewerid, reviewtime, review, " \
         "rating) VALUES({},'{}','{}','{}','{}')".format(movieid, reviewerid,
-                                                      reviewtime, review,
-                                                      rating)
+                                                        reviewtime,
+                                                        escaped_review,
+                                                        rating)
     db.execute(query)

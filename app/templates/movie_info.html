@@ -14,7 +14,12 @@
 {% if genres_str %}
 <h4>Genres: {{ genres_str }}</h4>
 {% endif %}
-{% for review in reviews %}
-{{ render_review(review) }}
-{% endfor %}
+{% if reviews %}
+<div class="card-columns">
+    {% for review in reviews %}
+    {{ render_review(review) }}
+    {% endfor %}
+</div>
+{% endif %}
+<a class="btn btn-primary btn-lg btn-block mt-3" href="{{ request.path }}/review">Leave a review!</a>
 {% endblock %}
