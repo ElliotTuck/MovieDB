@@ -64,7 +64,7 @@ class RegisterReviewerForm(RegisterUserForm):
     organization = StringField('Organization', [validators.Length(max=256)])
 
 class ReviewForm(Form):
-  review = StringField('Review', [validators.DataRequired(),
+  review = TextAreaField('Review', [validators.DataRequired(),
                                   validators.Length(max=10000)])
   rating = RadioField('Type:', [validators.DataRequired()],
                              choices=[('A+','A+'), ('A','A'), ('A-','A-'), ('B+','B+'),
