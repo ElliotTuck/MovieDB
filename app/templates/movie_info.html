@@ -3,16 +3,16 @@
 {% block content %}
 <h1>{{ movie_info.name }}</h1>
 <h3>Description: {{ movie_info.description }}</h3>
-<h4>Release Date: {{ movie_info.releasedate }}</h4>
-<h4>Duration: {{ movie_info.duration }} min.</h4>
-<h4>MPAA Rating: {{ movie_info.mpaarating }}</h4>
+<h4 class="text-secondary">Release Date: {{ movie_info.releasedate }}</h4>
+<h4 class="text-secondary">Duration: {{ movie_info.duration }} min.</h4>
+<h4 class="text-secondary">MPAA Rating: {{ movie_info.mpaarating }}</h4>
 {% if movie_info.budget != None %}
-<h4>Budget: ${{ movie_info.budget }}</h4>
+<h4 class="text-secondary">Budget: ${{ movie_info.budget }}</h4>
 {% else %}
-<h4>Budget: Unknown</h4>
+<h4 class="text-secondary">Budget: Unknown</h4>
 {% endif %}
 {% if genres_str %}
-<h4>Genres: {{ genres_str }}</h4>
+<h4 class="text-secondary">Genres: {{ genres_str }}</h4>
 {% endif %}
 {% if reviews %}
 <div class="card-columns">
