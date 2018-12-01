@@ -51,4 +51,5 @@ class RegisterForm(Form):
     password2 = PasswordField('Enter Password Again',
                               [validators.DataRequired(),
                                validators.Length(min=1,max=50),
-                               validators.EqualTo('password', message='Passwords must match')])
+                               validators.EqualTo('password',
+                                                  message='Passwords must match')])

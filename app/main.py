@@ -49,6 +49,7 @@ def index():
     return render_template("index.html", form=form)
 
 @app.route('/enter_movie', methods=['GET', 'POST'])
+@login_required
 def enter_movie():
     form = MovieEntryForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -118,9 +119,11 @@ def show_person_info(id_val):
 @login_manager.user_loader
 def load_user(id):
     registered_user = get_user(db, id)
-    username = registered_user.username
-    password = registered_user.password
-    return User(username, password)
+    if registered_user != None:
+        username = registered_user.username
+        password = registered_user.password
+        return User(username, password)
+    return None
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -134,7 +137,7 @@ def register():
             return redirect(url_for('register'))
         register_user(db, form.username.data, form.password.data)
         flash('User successfully registered')
-    return redirect(url_for('login'))
+    return render_template('register.html', form=form) 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -143,7 +146,8 @@ def login():
         return render_template('login.html', form=form)
     if request.method == 'POST' and form.validate():
         registered_user = get_user(db, form.username.data)
-        if registered_user is None or form.password.data != registered_user.password.strip():
+        if (registered_user is None or
+            form.password.data != registered_user.password.strip()):
             flash('Username or password is invalid', 'error')
             return redirect(url_for('login'))
         registered_user = User(registered_user.username,
@@ -151,4 +155,11 @@ def login():
         login_user(registered_user)
         flash('Logged in successfully')
         return redirect(request.args.get('next') or url_for('index'))
+    return render_template('login.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Logged out successfully')
     return redirect(url_for('index'))
