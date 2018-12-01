@@ -1,10 +1,11 @@
 import re
+import datetime
 from flask import Flask, render_template, request, flash, redirect, url_for
 from sqlalchemy import create_engine
 from flask_login import login_user, logout_user, current_user, login_required,\
     LoginManager
 from forms import SearchForm, MovieEntryForm, PersonEntryForm, LoginForm, \
-    RegisterAudienceMemberForm, RegisterReviewerForm
+    RegisterAudienceMemberForm, RegisterReviewerForm, ReviewForm
 from queries import * 
 from models import User
 
@@ -181,3 +182,18 @@ def logout():
     logout_user()
     flash('Logged out successfully')
     return redirect(url_for('index'))
+
+@app.route('/movie/<id_val>/review', methods=['GET', 'POST'])
+@login_required
+def review(id_val):
+    form = ReviewForm(request.form)
+    if request.method == 'POST' and form.validate():
+        movieId = id_val
+        reviewerId = current_user.get_id()
+        reviewTime = datetime.datetime.now()
+        review = form.review.data
+        rating = form.rating.data
+        add_review(db, movieId, reviewerId, reviewTime, review, rating)
+        flash('Review successfully entered.')
+        return redirect(url_for('show_movie_info',id_val= id_val))
+    return render_template('Review_page.html', form=form)

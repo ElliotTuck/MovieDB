@@ -62,3 +62,12 @@ class RegisterReviewerForm(RegisterUserForm):
                                      validators.Length(max=100)])
     location = StringField('Location', [validators.Length(max=200)])
     organization = StringField('Organization', [validators.Length(max=256)])
+
+class ReviewForm(Form):
+  review = StringField('Review', [validators.DataRequired(),
+                                  validators.Length(max=10000)])
+  rating = RadioField('Type:', [validators.DataRequired()],
+                             choices=[('A+','A+'), ('A','A'), ('A-','A-'), ('B+','B+'),
+                              ('B','B'), ('B-','B-'), ('C+','C+'), ('C','C'), ('C-','C-'),
+                              ('D+','D+'), ('D','D'), ('D-','D-'), ('F','F')])
+
