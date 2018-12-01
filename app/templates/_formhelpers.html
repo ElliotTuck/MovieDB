@@ -10,3 +10,7 @@
     {% endif %}
     </dd>
 {% endmacro %}
+
+{% macro render_review(review) %}
+    "{{ review.review }}" - {{ review.name }}
+{% endmacro %}

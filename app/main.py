@@ -7,8 +7,10 @@ from forms import SearchForm, MovieEntryForm, PersonEntryForm, LoginForm, \
     RegisterAudienceMemberForm, RegisterReviewerForm
 from queries import * 
 from models import User
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
+Bootstrap(app)
 app.secret_key = 'cse305'
 db = create_engine('postgresql://Elliot:password@moviedb.ch3vwlfnxu62.us-west-2.rds.amazonaws.com:5432/moviedb')
 login_manager = LoginManager()
@@ -99,11 +101,15 @@ def enter_person():
 
 @app.route('/movie/<id_val>')
 def show_movie_info(id_val):
-    connection = db.connect()
-    result = connection.execute('SELECT * FROM Movie WHERE Id = {}'.format(
-        id_val))
-    movie_info = result.fetchone()
-    return render_template('movie_info.html', movie_info=movie_info)
+    movie_info = get_movie_info(db, id_val)
+    movie_genres = get_movie_genres(db, id_val)
+    genres = []
+    for row in movie_genres:
+        genres.append(row.genre.strip())
+    genres_str = ", ".join(genres)
+    reviews = get_movie_reviews(db, id_val)
+    return render_template('movie_info.html', movie_info=movie_info,
+                           genres_str=genres_str, reviews=reviews)
 
 @app.route('/person/<id_val>')
 def show_person_info(id_val):

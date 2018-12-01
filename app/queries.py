@@ -52,3 +52,19 @@ def add_reviewer(db, username, password, name, location, organization):
         "CriticalScore) VALUES ('{}', '{}', {}, {}, 100)".format(
             username, name, location, organization)
     db.execute(query)
+
+def get_movie_info(db, movie_id):
+    query = "SELECT * FROM Movie WHERE Id = {}".format(movie_id)
+    result_set = db.execute(query)
+    return result_set.first()
+
+def get_movie_genres(db, movie_id):
+    query = "SELECT * FROM MovieGenre WHERE Id = {}".format(movie_id)
+    result_set = db.execute(query)
+    return result_set
+
+def get_movie_reviews(db, movie_id):
+    query = "SELECT * FROM Review INNER JOIN Reviewer ON Review.ReviewerId = "\
+        "Reviewer.Username WHERE Review.MovieId = {}".format(movie_id)
+    result_set = db.execute(query)
+    return result_set

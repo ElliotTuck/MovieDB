@@ -1,3 +1,4 @@
+{% from "_formhelpers.html" import render_review %}
 {% extends "base.html" %}
 {% block content %}
 <h1>{{ movie_info.name }}</h1>
@@ -10,4 +11,10 @@
 {% else %}
 <h4>Budget: Unknown</h4>
 {% endif %}
+{% if genres_str %}
+<h4>Genres: {{ genres_str }}</h4>
+{% endif %}
+{% for review in reviews %}
+{{ render_review(review) }}
+{% endfor %}
 {% endblock %}
