@@ -26,6 +26,7 @@
 {% if genres_str %}
 <h4 class="text-secondary">Genres: {{ genres_str }}</h4>
 {% endif %}
+<h4 class="text-primary">Average Reviewer Rating: {{ avg_reviewer_rating }}</h4>
 {% if reviews %}
 <div class="card-columns">
     {% for review in reviews %}

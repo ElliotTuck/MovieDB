@@ -77,3 +77,8 @@ def add_review(db, movieid, reviewerid, reviewtime, review, rating):
                                                         escaped_review,
                                                         rating)
     db.execute(query)
+
+def get_reviewer_ratings(db, movie_id):
+    query = "SELECT Rating FROM Review WHERE MovieId = {}".format(movie_id)
+    result_set = db.execute(query)
+    return result_set

@@ -109,8 +109,21 @@ def show_movie_info(id_val):
         genres.append(row.genre.strip())
     genres_str = ", ".join(genres)
     reviews = get_movie_reviews(db, id_val)
+    reviewer_ratings = get_reviewer_ratings(db, id_val)
+    count = 0
+    sum = 0
+    grade_values = {'A+':13, 'A':12, 'A-':11, 'B+':10, 'B':9, 'B-':8, 'C+':7,
+                    'C':6, 'C-':5, 'D+':4, 'D':3, 'D-':2, 'F':1}
+    grade_values_inv = {v: k for k, v in grade_values.items()}
+    for reviewer_rating in reviewer_ratings:
+        rating = reviewer_rating.rating.strip()
+        count += 1
+        sum += grade_values[rating]
+    avg_rating = round(sum/count) if count > 0 else -1
+    avg_rating = grade_values_inv[avg_rating] if avg_rating != -1 else 'No Reviewer Ratings'
     return render_template('movie_info.html', movie_info=movie_info,
-                           genres_str=genres_str, reviews=reviews)
+                           genres_str=genres_str, reviews=reviews,
+                           avg_reviewer_rating=avg_rating)
 
 @app.route('/person/<id_val>')
 def show_person_info(id_val):
