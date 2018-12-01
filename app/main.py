@@ -7,10 +7,8 @@ from forms import SearchForm, MovieEntryForm, PersonEntryForm, LoginForm, \
     RegisterAudienceMemberForm, RegisterReviewerForm
 from queries import * 
 from models import User
-from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
-Bootstrap(app)
 app.secret_key = 'cse305'
 db = create_engine('postgresql://Elliot:password@moviedb.ch3vwlfnxu62.us-west-2.rds.amazonaws.com:5432/moviedb')
 login_manager = LoginManager()
