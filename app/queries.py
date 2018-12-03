@@ -121,10 +121,10 @@ def get_most_reviewed_movie(db):
 
 def get_reviewer_reviews(db, reviewer_id):
     query = "SELECT M.Name AS MovieName, RR.Name AS ReviewerName, R.Rating, "\
-        "R.ReviewTime, R.Review, RR.Location, RR.Organization, R.ReviewerId " \
-        "FROM Review AS R INNER JOIN Reviewer AS RR ON R.ReviewerId = " \
-        "RR.Username INNER JOIN Movie AS M ON M.Id = R.MovieId WHERE " \
-        "R.ReviewerId = '{}'".format(reviewer_id)
+        "R.ReviewTime, R.Review, RR.Location, RR.Organization, R.ReviewerId, "\
+        "M.Id AS MovieId FROM Review AS R INNER JOIN Reviewer AS RR ON " \
+        "R.ReviewerId = RR.Username INNER JOIN Movie AS M ON M.Id = " \
+        "R.MovieId WHERE R.ReviewerId = '{}'".format(reviewer_id)
     result_set = db.execute(query)
     return result_set
 

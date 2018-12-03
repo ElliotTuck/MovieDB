@@ -229,10 +229,13 @@ def show_reviewer_account(id_val):
     return render_template('reviewer_account_info.html',
                            account_info=account_info, reviews=reviews)
 
-@app.route('/delete_review/<movie_id>/<reviewer_id>/<review_time>')
+@app.route('/delete_review/<movie_id>/<reviewer_id>/<review_time>/<from_str>')
 @login_required
-def delete_review(movie_id, reviewer_id, review_time):
+def delete_review(movie_id, reviewer_id, review_time, from_str):
     if current_user.get_id().strip() == reviewer_id:
         remove_review(db, movie_id, reviewer_id, review_time)
         flash('Review deleted successfully')
-    return redirect(request.args.get('next') or url_for('index'))
+    if from_str == 'from_movie_info':
+        return redirect(url_for('show_movie_info', id_val=movie_id))
+    else:
+        return redirect(url_for('show_reviewer_account', id_val=reviewer_id))
