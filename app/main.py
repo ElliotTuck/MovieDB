@@ -211,7 +211,33 @@ def review(id_val):
         return redirect(url_for('show_movie_info',id_val= id_val))
     return render_template('Review_page.html', form=form)
 
+@app.route('/movie/<id_val>/rate', methods=['GET', 'POST'])
+@login_required
+def rate(id_val):
+    form = ReviewForm(request.form)
+    if request.method == 'POST' and form.validate():
+        movieId = id_val
+        audienceId = current_user.get_id()
+        rating = form.rating.data
+        add_rating(db, movieId, reviewerId, reviewTime, review, rating)
+        flash('Rating successfully entered.')
+        return redirect(url_for('show_movie_info',id_val= id_val))
+    return render_template('Rating_page.html', form=form)
+
+
 @app.route('/highest_rated_movie')
 def highest_rated_movie():
     movie_id = get_highest_rated_movie(db)
     return redirect(url_for('show_movie_info', id_val=movie_id))
+
+@app.route('/movie/<id_val>/identify')
+@login_required
+def identifyuser(id_val):
+    if check_in_reviewer(db, current_user.get_id()):
+        return redirect(url_for('review',id_val= id_val))
+    elif  check_in_audience(db, current_user.get_id()):
+        return redirect(url_for('rate',id_val= id_val))
+    else:
+        flash('You are the adminstrator. Can not add a review/rate.')
+        return redirect(url_for('show_movie_info',id_val= id_val))
+

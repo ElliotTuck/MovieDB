@@ -80,6 +80,11 @@ def add_review(db, movieid, reviewerid, reviewtime, review, rating):
                                                         rating)
     db.execute(query)
 
+def add_rating(db, movieid, audienceid, rating):
+    query = "INSERT INTO Rating (movieid, audienceid, rating), "\
+            "VALUES({},'{}','{}')".format(movieid,audienceid,rating)
+    db.execute(query)
+
 def get_reviewer_ratings(db, movie_id):
     query = "SELECT Rating FROM Review WHERE MovieId = {}".format(movie_id)
     result_set = db.execute(query)
@@ -112,3 +117,16 @@ def get_highest_rated_movie(db):
     return highest_id
 
 
+def check_in_reviewer(db, username):
+    query = "SELECT * FROM Reviewer where '{}' = reviewer.username".format(username)
+    result = db.execute(query)
+    if (result.first() == None):
+        return False
+    return True
+
+def check_in_audience(db, username):
+    query = "SELECT * FROM AudienceMember where '{}' = AudienceMember.username".format(username)
+    result = db.execute(query)
+    if (result.first() == None):
+        return False
+    return True

@@ -71,3 +71,9 @@ class ReviewForm(Form):
                               ('B','B'), ('B-','B-'), ('C+','C+'), ('C','C'), ('C-','C-'),
                               ('D+','D+'), ('D','D'), ('D-','D-'), ('F','F')])
 
+class RatingForm(Form):
+  rating = RadioField('Type:', [validators.DataRequired()],
+                             choices=[('A+','A+'), ('A','A'), ('A-','A-'), ('B+','B+'),
+                              ('B','B'), ('B-','B-'), ('C+','C+'), ('C','C'), ('C-','C-'),
+                              ('D+','D+'), ('D','D'), ('D-','D-'), ('F','F')])
+
