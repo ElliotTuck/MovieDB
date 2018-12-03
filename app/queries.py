@@ -118,4 +118,13 @@ def get_most_reviewed_movie(db):
     movie_id = result_set.first().movieid
     return movie_id
 
+def get_reviewer_reviews(db, reviewer_id):
+    query = "SELECT * FROM Review INNER JOIN Reviewer ON Review.ReviewerId = "\
+        "Reviewer.Username WHERE ReviewerId = '{}'".format(reviewer_id)
+    result_set = db.execute(query)
+    return result_set
 
+def remove_review(db, movie_id, reviewer_id, review_time):
+    query = "DELETE FROM Review WHERE MovieId = {} AND ReviewerId = '{}' " \
+        "AND ReviewTime = '{}'".format(movie_id, reviewer_id, review_time)
+    db.execute(query)

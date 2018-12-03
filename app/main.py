@@ -220,3 +220,16 @@ def highest_rated_movie():
 def most_reviewed_movie():
     movie_id = get_most_reviewed_movie(db)
     return redirect(url_for('show_movie_info', id_val=movie_id))
+
+@app.route('/reviewer/<id_val>')
+@login_required
+def show_reviewer_account(id_val):
+    reviews = get_reviewer_reviews(db, id_val)
+    return render_template('reviewer_account_info.html', reviews=reviews)
+
+@app.route('/delete_review/<movie_id>/<reviewer_id>/<review_time>')
+@login_required
+def delete_review(movie_id, reviewer_id, review_time):
+    if current_user.get_id().strip() == reviewer_id:
+        remove_review(db, movie_id, reviewer_id, review_time)
+    return redirect(request.args.get('next') or url_for('index'))

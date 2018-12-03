@@ -1,0 +1,9 @@
+{% from "_formhelpers.html" import render_review %}
+{% extends "base.html" %}
+{% block content %}
+<div class="card-columns">
+    {% for review in reviews %}
+    {{ render_review(review, current_user) }}
+    {% endfor %}
+</div>
+{% endblock %}

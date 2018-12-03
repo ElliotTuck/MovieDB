@@ -11,7 +11,7 @@
     </dd>
 {% endmacro %}
 
-{% macro render_review(review) %}
+{% macro render_review(review, current_user) %}
     <div class="card">
         {% if review.rating %}
         <div class="card-header">
@@ -38,6 +38,9 @@
                     {% endif %}
                 </footer>
             </blockquote>
+            {% if current_user.is_authenticated and current_user.get_id().strip() == review.reviewerid.strip() %}
+            <a href="/delete_review/{{ review.movieid }}/{{ review.reviewerid.strip() }}/{{ review.reviewtime }}" class="btn btn-primary">Delete Review</a>
+            {% endif %}
         </div>
     </div>
 {% endmacro %}

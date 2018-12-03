@@ -30,7 +30,7 @@
 {% if reviews %}
 <div class="card-columns">
     {% for review in reviews %}
-    {{ render_review(review) }}
+    {{ render_review(review, current_user) }}
     {% endfor %}
 </div>
 {% endif %}
