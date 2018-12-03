@@ -224,12 +224,15 @@ def most_reviewed_movie():
 @app.route('/reviewer/<id_val>')
 @login_required
 def show_reviewer_account(id_val):
-    reviews = get_reviewer_reviews(db, id_val)
-    return render_template('reviewer_account_info.html', reviews=reviews)
+    account_info = get_reviewer_info(db, id_val)
+    reviews = get_reviewer_reviews(db, id_val).fetchall()
+    return render_template('reviewer_account_info.html',
+                           account_info=account_info, reviews=reviews)
 
 @app.route('/delete_review/<movie_id>/<reviewer_id>/<review_time>')
 @login_required
 def delete_review(movie_id, reviewer_id, review_time):
     if current_user.get_id().strip() == reviewer_id:
         remove_review(db, movie_id, reviewer_id, review_time)
+        flash('Review deleted successfully')
     return redirect(request.args.get('next') or url_for('index'))
