@@ -1,4 +1,4 @@
-{% from "_formhelpers.html" import render_review %}
+{% from "_formhelpers.html" import render_account_page_review %}
 {% extends "base.html" %}
 {% block content %}
 <h1>Hello, {{ account_info.name.strip() }}!
@@ -25,7 +25,7 @@
 {% if reviews|length != 0 %}
 <div class="card-columns">
     {% for review in reviews %}
-    {{ render_review(review, current_user) }}
+    {{ render_account_page_review(review) }}
     {% endfor %}
 </div>
 {% else %}

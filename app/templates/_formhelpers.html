@@ -44,3 +44,36 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro render_account_page_review(review) %}
+    <div class="card">
+        {% if review.rating %}
+        <div class="card-header">
+            <div class="d-flex justify-content-between">
+                <div>
+                    Rating: {{ review.rating }}
+                </div>
+                <div>
+                    {{ review.reviewtime.strftime('%b. %d, %Y | %I:%M %p') }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="card-body">
+            <p>Here's what you had to say about {{ review.moviename.strip() }}:</p>
+            <blockquote class="blockquote mb-0">
+                <p>"{{ review.review.strip() }}"</p>
+                <footer class="blockquote-footer">
+                    {{ review.reviewername.strip() }}
+                    {% if review.location %}
+                    , {{ review.location.strip() }}
+                    {% endif %}
+                    {% if review.organization %}
+                    , {{ review.organization.strip() }}
+                    {% endif %}
+                </footer>
+            </blockquote>
+            <a href="/delete_review/{{ review.movieid }}/{{ review.reviewerid.strip() }}/{{ review.reviewtime }}" class="btn btn-danger">Delete Review</a>
+        </div>
+    </div>
+{% endmacro %}
