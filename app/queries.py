@@ -1,5 +1,6 @@
 grade_values = {'A+':13, 'A':12, 'A-':11, 'B+':10, 'B':9, 'B-':8, 'C+':7,
                 'C':6, 'C-':5, 'D+':4, 'D':3, 'D-':2, 'F':1}
+
 def movies_like(db, search_str):
     query = "SELECT * FROM Movie WHERE LOWER(Name) LIKE '%%{}%%'".format(
         search_str.lower())
@@ -116,6 +117,12 @@ def get_highest_rated_movie(db):
             highest_id = movie_id
     return highest_id
 
+def get_most_reviewed_movie(db):
+    query = "SELECT MovieId, COUNT(*) AS ReviewCount FROM Review GROUP BY " \
+        "MovieId ORDER BY ReviewCount DESC"
+    result_set = db.execute(query)
+    movie_id = result_set.first().movieid
+    return movie_id
 
 def check_in_reviewer(db, username):
     query = "SELECT * FROM Reviewer where '{}' = reviewer.username".format(username)
@@ -123,6 +130,14 @@ def check_in_reviewer(db, username):
     if (result.first() == None):
         return False
     return True
+def get_reviewer_reviews(db, reviewer_id):
+    query = "SELECT M.Name AS MovieName, RR.Name AS ReviewerName, R.Rating, "\
+        "R.ReviewTime, R.Review, RR.Location, RR.Organization, R.ReviewerId, "\
+        "M.Id AS MovieId FROM Review AS R INNER JOIN Reviewer AS RR ON " \
+        "R.ReviewerId = RR.Username INNER JOIN Movie AS M ON M.Id = " \
+        "R.MovieId WHERE R.ReviewerId = '{}'".format(reviewer_id)
+    result_set = db.execute(query)
+    return result_set
 
 def check_in_audience(db, username):
     query = "SELECT * FROM AudienceMember where '{}' = AudienceMember.username".format(username)
@@ -130,3 +145,12 @@ def check_in_audience(db, username):
     if (result.first() == None):
         return False
     return True
+def remove_review(db, movie_id, reviewer_id, review_time):
+    query = "DELETE FROM Review WHERE MovieId = {} AND ReviewerId = '{}' " \
+        "AND ReviewTime = '{}'".format(movie_id, reviewer_id, review_time)
+    db.execute(query)
+
+def get_reviewer_info(db, reviewer_id):
+    query = "SELECT * FROM Reviewer WHERE Username = '{}'".format(reviewer_id)
+    result_set = db.execute(query)
+    return result_set.first()

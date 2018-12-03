@@ -3,7 +3,7 @@ from wtforms import Form, StringField, IntegerField, TextAreaField,\
 from wtforms.fields.html5 import DateField
 
 class SearchForm(Form):
-    searchbar = StringField('Search Key word:', [validators.DataRequired()])
+    searchbar = StringField('Search Key word:')
     searchtype = RadioField('Type:', [validators.DataRequired()],
                              choices=[('movie','movie'), ('actor','actor'),
                                       ('director','director'), ('producer','producer')])
