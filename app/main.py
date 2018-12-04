@@ -125,10 +125,8 @@ def show_movie_info(id_val):
 
 @app.route('/person/<id_val>')
 def show_person_info(id_val):
-    connection = engine.connect()
-    result = connection.execute('SELECT * FROM Person WHERE Id = {}'.format(id_val))
-    person_info = result.fetchone()
-    return render_template('person_info', person_info=person_info)
+    person_info = get_person_info(db, id_val)
+    return render_template('person_info.html', person_info=person_info)
 
 @login_manager.user_loader
 def load_user(id):

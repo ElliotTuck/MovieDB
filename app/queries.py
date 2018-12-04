@@ -72,6 +72,11 @@ def get_movie_reviews(db, movie_id):
     result_set = db.execute(query)
     return result_set
 
+def get_person_info(db, person_id):
+    query = "SELECT * FROM Person WHERE Id = {}".format(person_id)
+    result_set = db.execute(query)
+    return result_set.first()
+
 def add_review(db, movieid, reviewerid, reviewtime, review, rating):
     escaped_review = review.translate(str.maketrans({"'": r"''"}))
     query = "INSERT INTO Review (movieid, reviewerid, reviewtime, review, " \

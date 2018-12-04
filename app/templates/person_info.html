@@ -1,10 +1,13 @@
+{% from "_formhelpers.html" import render_review %}
 {% extends "base.html" %}
 {% block content %}
 <h1>{{ person_info.name }}</h1>
-<h3>Date of birth: {{ person_info.date_of_birth}}</h3>
-{% if movie_info.budget != None %}
-<h4>Budget: ${{ movie_info.budget }}</h4>
-{% else %}
-<h4>Budget: Unknown</h4>
-{% endif %}
+<!-- <h3>Description: {{ person_info.description }}</h3> -->
+<h4 class="text-secondary">Date of Birth:
+    {% if person_info.dateofbirth %}
+    {{ person_info.dateofbirth }}
+    {% else %}
+    Unknown
+    {% endif %}
+</h4>
 {% endblock %}
