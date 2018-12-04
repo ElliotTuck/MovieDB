@@ -30,6 +30,7 @@ class MovieEntryForm(Form):
 class PersonEntryForm(Form):
     name = StringField('Name', [validators.DataRequired()])
     date_of_birth = DateField('Date of Birth', [validators.Optional()])
+    description = StringField('Description', [validators.Optional()])
     nationality = StringField('Nationality',[validators.Optional()])
     award = StringField('Award',[validators.Optional()])
     job = SelectMultipleField('Known for', [validators.Optional()],

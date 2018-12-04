@@ -72,7 +72,8 @@ def enter_person():
         awardString= form.award.data
         awards = re.split(', |,',awardString)
         jobs = form.job.data
-        insert_person(db, name, date_of_birth, nationalities, awards, jobs)
+        description = form.description.data
+        insert_person(db, name, date_of_birth, nationalities, awards, jobs, description)
         flash('Person information successfully entered.')
         return redirect(url_for('index'))
     return render_template('enter_person.html', form=form)
@@ -104,12 +105,10 @@ def show_movie_info(id_val):
 def show_person_info(id_val):
     person_info = get_person_info(db, id_val)
     person_nationality = get_person_nation(db, id_val)
-    print("hello")
     nationalities = []
     for row in person_nationality:
         nationalities.append(row.nationality.strip())
     nationalities_str = ", ".join(nationalities)
-    print("hello2")
     person_award = get_person_awards(db, id_val)
     awards = []
     for row in person_award:

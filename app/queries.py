@@ -25,10 +25,11 @@ def insert_movie(db, name, release_date, duration, description, budget,
             id_val, genre)
         db.execute(query)
 
-def insert_person(db, name, date_of_birth, nationalities, awards, jobs):
+def insert_person(db, name, date_of_birth, nationalities, awards, jobs, description):
     date_of_birth = "'"+str(date_of_birth) + "'" if date_of_birth else 'NULL'
-    query = "INSERT INTO Person(Id, dateofbirth, name) VALUES (DEFAULT, {}, '{}')"\
-            "RETURNING Id".format(date_of_birth, name)
+    description = "'" + description + "'" if description != '' else 'NULL'
+    query = "INSERT INTO Person(Id, dateofbirth, name, description) VALUES (DEFAULT, {}, '{}',{})"\
+            "RETURNING Id".format(date_of_birth, name,description)
     result_set = db.execute(query)
     id_val = result_set.fetchone()[0]
     for nationality in nationalities:
@@ -46,6 +47,7 @@ def insert_person(db, name, date_of_birth, nationalities, awards, jobs):
                 db.execute("INSERT INTO director(id) VALUES({})".format(id_val))
             if job == 'Producer':
                 db.execute("INSERT INTO producer(id) VALUES({})".format(id_val))
+
 
 def person_like(db, search_str, role):
     query = "SELECT person.id, person.name From person, {} where {}.id = person.id AND LOWER(person.Name) LIKE '%%{}%%'".format(role,role,
