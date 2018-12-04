@@ -25,6 +25,28 @@ def insert_movie(db, name, release_date, duration, description, budget,
             id_val, genre)
         db.execute(query)
 
+def insert_person(db, name, date_of_birth, nationalities, awards, jobs):
+    date_of_birth = "'"+str(date_of_birth) + "'" if date_of_birth else 'NULL'
+    query = "INSERT INTO Person(Id, dateofbirth, name) VALUES (DEFAULT, {}, '{}')"\
+            "RETURNING Id".format(date_of_birth, name)
+    result_set = db.execute(query)
+    id_val = result_set.fetchone()[0]
+    for nationality in nationalities:
+        query = "INSERT INTO PersonNationality(Id, nationality)"\
+                "VALUES ({},'{}')".format(id_val, nationality)
+        db.execute(query)
+    for award in awards:
+        query = "INSERT INTO PersonAward(Id, award)"\
+                "VALUES ({},'{}')".format(id_val, award)
+        db.execute(query)
+    for job in jobs:
+            if job == 'Actor':
+                db.execute("INSERT INTO actor(id) VALUES({})".format(id_val))
+            if job == 'Director':
+                db.execute("INSERT INTO director(id) VALUES({})".format(id_val))
+            if job == 'Producer':
+                db.execute("INSERT INTO producer(id) VALUES({})".format(id_val))
+
 def person_like(db, search_str, role):
     query = "SELECT person.id, person.name From person, {} where {}.id = person.id AND LOWER(person.Name) LIKE '%%{}%%'".format(role,role,
                 search_str.lower())
@@ -76,6 +98,17 @@ def get_person_info(db, person_id):
     query = "SELECT * FROM Person WHERE Id = {}".format(person_id)
     result_set = db.execute(query)
     return result_set.first()
+
+def get_person_nation(db, person_id):
+    query = "SELECT * FROM personnationality WHERE Id = {}".format(person_id)
+    result_set = db.execute(query)
+    return result_set
+
+def get_person_awards(db, person_id):
+    query = "SELECT * FROM personaward WHERE Id = {}".format(person_id)
+    result_set = db.execute(query)
+    return result_set
+
 
 def add_review(db, movieid, reviewerid, reviewtime, review, rating):
     escaped_review = review.translate(str.maketrans({"'": r"''"}))

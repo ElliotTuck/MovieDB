@@ -2,10 +2,31 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>{{ person_info.name }}</h1>
-<!-- <h3>Description: {{ person_info.description }}</h3> -->
 <h4 class="text-secondary">Date of Birth:
     {% if person_info.dateofbirth %}
     {{ person_info.dateofbirth }}
+    {% else %}
+    Unknown
+    {% endif %}
+</h4>
+<h4 class="text-secondary">Nationality:
+    {% if nationalities_str %}
+    {{ nationalities_str }}
+    {% else %}
+    Unknown
+    {% endif%}
+</h4>
+
+<h4 class="text-secondary">Awards:
+    {% if awards_str %}
+    {{ awards_str }}
+    {% else %}
+    Unknown
+    {% endif %}
+</h4>
+<h4 class="text-secondary">Description:
+    {% if person_info.description %}
+    {{ person_info.description }}
     {% else %}
     Unknown
     {% endif %}

@@ -72,30 +72,7 @@ def enter_person():
         awardString= form.award.data
         awards = re.split(', |,',awardString)
         jobs = form.job.data
-        connection = db.connect()
-        # insert movie info into Movie table
-        result = connection.execute("INSERT INTO Person(Id, dateofbirth, name)" \
-                           "VALUES (DEFAULT, '{}', '{}')" \
-                           "RETURNING Id".
-                           format(date_of_birth, name))
-        id_val = result.fetchone()[0]
-        # insert nation into PersonNationality table
-        for nationality in nationalities:
-            connection.execute("INSERT INTO PersonNationality(Id, nationality)"\
-                                "VALUES ({},'{}')".format(id_val, nationality))
-        for award in awards:
-            connection.execute("INSERT INTO PersonAward(Id, award)"\
-                                "VALUES ({},'{}')".format(id_val, award))
-
-        # insert into actor/director/producer table
-        print(jobs);
-        for job in jobs:
-            if job == 'Actor':
-                connection.execute("INSERT INTO actor(id) VALUES({})".format(id_val))
-            if job == 'Director':
-                connection.execute("INSERT INTO director(id) VALUES({})".format(id_val))
-            if job == 'Producer':
-                connection.execute("INSERT INTO producer(id) VALUES({})".format(id_val))
+        insert_person(db, name, date_of_birth, nationalities, awards, jobs)
         flash('Person information successfully entered.')
         return redirect(url_for('index'))
     return render_template('enter_person.html', form=form)
@@ -126,7 +103,20 @@ def show_movie_info(id_val):
 @app.route('/person/<id_val>')
 def show_person_info(id_val):
     person_info = get_person_info(db, id_val)
-    return render_template('person_info.html', person_info=person_info)
+    person_nationality = get_person_nation(db, id_val)
+    print("hello")
+    nationalities = []
+    for row in person_nationality:
+        nationalities.append(row.nationality.strip())
+    nationalities_str = ", ".join(nationalities)
+    print("hello2")
+    person_award = get_person_awards(db, id_val)
+    awards = []
+    for row in person_award:
+        awards.append(row.award.strip())
+        awards_str = ", ".join(awards)
+    return render_template('person_info.html', person_info=person_info,
+                            nationalities_str=nationalities_str, awards_str=awards_str)
 
 @login_manager.user_loader
 def load_user(id):
