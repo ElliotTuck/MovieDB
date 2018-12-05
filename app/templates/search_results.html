@@ -5,4 +5,8 @@
     <li><a href="/movie/{{ id }}">{{ title }}</a></li>
     {% endfor %}
 </ul>
+{% if has_access %}
+<a class="btn btn-primary btn-lg btn-block mt-3 mb-3" href="/enter_movie">Add a movie!</a>
+{% endif %}
 {% endblock %}
+
