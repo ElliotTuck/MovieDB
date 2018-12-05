@@ -98,9 +98,12 @@ def show_movie_info(id_val):
     avg_rating = round(sum/count) if count > 0 else -1
     avg_rating = grade_values_inv[avg_rating] if avg_rating != -1 else 'No Reviewer Ratings'
     actors = get_actors(db, id_val)
+    actor_count = actors.rowcount
+    has_actors = actor_count > 0
     return render_template('movie_info.html', movie_info=movie_info,
                            genres_str=genres_str, reviews=reviews,
-                           avg_reviewer_rating=avg_rating, actors=actors)
+                           avg_reviewer_rating=avg_rating, actors=actors,
+                           has_actors=has_actors)
 
 @app.route('/person/<id_val>')
 def show_person_info(id_val):

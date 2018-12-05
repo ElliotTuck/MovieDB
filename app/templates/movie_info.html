@@ -26,6 +26,14 @@
 {% if genres_str %}
 <h4 class="text-secondary">Genres: {{ genres_str }}</h4>
 {% endif %}
+{% if has_actors %}
+<h4 class="text-info">Actors:</h4>
+<ul>
+    {% for actor in actors %}
+    <li><a href={{ url_for('show_person_info', id_val=actor.id) }}>{{ actor.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
 <h4 class="text-primary">Average Reviewer Rating: {{ avg_reviewer_rating }}</h4>
 {% if reviews %}
 <div class="card-columns">

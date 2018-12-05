@@ -198,7 +198,8 @@ def get_reviewer_info(db, reviewer_id):
     return result_set.first()
 
 def get_actors(db, movie_id):
-    query = "SELECT * FROM Acting INNER JOIN Actor ON ActorId = Id WHERE " \
-        "MovieId = {}".format(movie_id)
+    query = "SELECT * FROM Acting INNER JOIN Actor ON ActorId = Id INNER " \
+        "JOIN Person ON Person.Id = Actor.Id WHERE MovieId = {}".format(
+            movie_id)
     result_set = db.execute(query)
     return result_set
