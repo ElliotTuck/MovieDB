@@ -24,16 +24,16 @@ def index():
         search_string = form.searchbar.data
         search_type = form.searchtype.data if form.searchtype.data != 'None' \
             else 'NULL'
+        username = current_user.get_id()
+        has_access = False
+        if (not check_in_reviewer(db, username) and
+            not check_in_audience(db, username)):
+            has_access = True
         if search_type=='movie':
             result_set = movies_like(db, search_string)
             movie_listing = []
             for row in result_set:
                 movie_listing.append((row.id, row.name.strip()))
-            username = current_user.get_id()
-            has_access = False
-            if (not check_in_reviewer(db, username) and
-                not check_in_audience(db, username)):
-                has_access = True
             return render_template('search_results.html',
                                    movie_listing=movie_listing,
                                    has_access=has_access)
@@ -43,7 +43,8 @@ def index():
             for row in result:
                 person_listing.append((row.id, row.name.strip()))
             return render_template('search_person.html',
-                                    person_listing = person_listing)
+                                    person_listing=person_listing,
+                                   has_access=has_access)
 
     username = ''
     logged_in = False
