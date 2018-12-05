@@ -208,6 +208,12 @@ def get_reviewer_info(db, reviewer_id):
     result_set = db.execute(query)
     return result_set.first()
 
+def get_audience_member_info(db, audience_member_id):
+    query = "SELECT * FROM AudienceMember WHERE Username = '{}'".format(
+        audience_member_id)
+    result_set = db.execute(query)
+    return result_set.first()
+
 def get_actors(db, movie_id):
     query = "SELECT * FROM Acting INNER JOIN Actor ON ActorId = Id INNER " \
         "JOIN Person ON Person.Id = Actor.Id WHERE MovieId = {}".format(

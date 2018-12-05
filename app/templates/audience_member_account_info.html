@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Hello, {{ account_info.username.strip() }}</h1>
+<p class="text-secondary">Your account information:</p>
+<ul class="list-unstyled text-secondary">
+    <li class="list-group-item">Username: {{ account_info.username.strip() }}</li>
+    <li class="list-group-item">User since: {{ account_info.since }}</li>
+    <li class="list-group-item">Status: {{ account_info.status.strip() }}</li>
+</ul>
+{% endblock %}

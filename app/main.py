@@ -308,6 +308,13 @@ def show_reviewer_account(id_val):
     return render_template('reviewer_account_info.html',
                            account_info=account_info, reviews=reviews)
 
+@app.route('/audience_member/<id_val>')
+@login_required
+def show_audience_member_account(id_val):
+    account_info = get_audience_member_info(db, id_val)
+    return render_template('audience_member_account_info.html',
+                           account_info=account_info)
+
 @app.route('/delete_review/<movie_id>/<reviewer_id>/<review_time>/<from_str>')
 @login_required
 def delete_review(movie_id, reviewer_id, review_time, from_str):
@@ -329,4 +336,14 @@ def identifyuser(id_val):
     else:
         flash('You are the adminstrator. Cannot add a review/rate.')
         return redirect(url_for('show_movie_info',id_val=id_val))
+
+@app.route('/account/<id_val>')
+@login_required
+def direct_to_account(id_val):
+    if check_in_reviewer(db, id_val):
+        return redirect(url_for('show_reviewer_account', id_val=id_val))
+    elif check_in_audience(db, id_val):
+        return redirect(url_for('show_audience_member_account', id_val=id_val))
+    else:
+        return render_template('no_account.html')
 
