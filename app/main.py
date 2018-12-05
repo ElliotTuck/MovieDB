@@ -26,7 +26,8 @@ def index():
             else 'NULL'
         username = current_user.get_id()
         has_access = False
-        if (not check_in_reviewer(db, username) and
+        if (current_user.is_authenticated and
+            not check_in_reviewer(db, username) and
             not check_in_audience(db, username)):
             has_access = True
         if search_type=='movie':
