@@ -48,6 +48,16 @@ def insert_person(db, name, date_of_birth, nationalities, awards, jobs, descript
             if job == 'Producer':
                 db.execute("INSERT INTO producer(id) VALUES({})".format(id_val))
 
+def insert_relation(db, relation, movie_id, person_id):
+    if relation[0] == 'Acting':
+        query = "INSERT INTO acting(movieid, actorid) VALUES({},{})".format(movie_id, person_id)
+        db.execute(query)
+    if relation[0] == 'Directing':
+        query = "INSERT INTO directing(movieid, directorid) VALUES({},{})".format(movie_id, person_id)
+        db.execute(query)
+    if relation[0] == 'Producing':
+        query = "INSERT INTO producing(movieid, producerid) VALUES({},{})".format(movie_id, person_id)
+        db.execute(query)
 
 def person_like(db, search_str, role):
     query = "SELECT person.id, person.name From person, {} where {}.id = person.id AND LOWER(person.Name) LIKE '%%{}%%'".format(role,role,

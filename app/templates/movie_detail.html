@@ -1,0 +1,30 @@
+{% from "_formhelpers.html" import render_review %}
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ movie_info.name }}</h1>
+<h3>Description: {{ movie_info.description }}</h3>
+<h4 class="text-secondary">Release Date: {{ movie_info.releasedate }}</h4>
+<h4 class="text-secondary">Duration:
+    {% if movie_info.duration %}
+    {{ movie_info.duration }} min.
+    {% else %}
+    Unknown
+    {% endif %}
+</h4>
+<h4 class="text-secondary">MPAA Rating:
+    {% if movie_info.mpaarating %}
+    {{ movie_info.mpaarating }}
+    {% else %}
+    Unknown
+    {% endif %}
+</h4>
+{% if movie_info.budget != None %}
+<h4 class="text-secondary">Budget: ${{ movie_info.budget }}</h4>
+{% else %}
+<h4 class="text-secondary">Budget: Unknown</h4>
+{% endif %}
+{% if genres_str %}
+<h4 class="text-secondary">Genres: {{ genres_str }}</h4>
+{% endif %}
+<a class="btn btn-primary btn-lg btn-block mt-3 mb-3" href="/enter_acting2/{{ movie_id }}">Select the movie!</a>
+{% endblock %}
