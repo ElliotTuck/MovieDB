@@ -15,7 +15,7 @@ def insert_movie(db, name, release_date, duration, description, budget,
     budget = budget if budget else 'NULL'
     mpaa_rating = "'" + mpaa_rating + "'" if mpaa_rating != 'None' else 'NULL'
     query = "INSERT INTO Movie(Id, Name, ReleaseDate, Duration, Description, "\
-        "Budget, MPAARating) VALUES (DEFAULT, '{}', {}, {}, {}, {}, {})"  \
+        "Budget, MPAARating) VALUES (DEFAULT, '{}', {}, {}, {}, {}, {})"      \
         "RETURNING Id".format(name, release_date, duration, description,
                               budget, mpaa_rating)
     result_set = db.execute(query)
@@ -25,28 +25,30 @@ def insert_movie(db, name, release_date, duration, description, budget,
             id_val, genre)
         db.execute(query)
 
-def insert_person(db, name, date_of_birth, nationalities, awards, jobs, description):
+def insert_person(db, name, date_of_birth, nationalities, awards, jobs,
+                  description):
     date_of_birth = "'"+str(date_of_birth) + "'" if date_of_birth else 'NULL'
     description = "'" + description + "'" if description != '' else 'NULL'
-    query = "INSERT INTO Person(Id, dateofbirth, name, description) VALUES (DEFAULT, {}, '{}',{})"\
-            "RETURNING Id".format(date_of_birth, name,description)
+    query = "INSERT INTO Person(Id, dateofbirth, name, description) VALUES " \
+        "(DEFAULT, {}, '{}',{}) RETURNING Id".format(date_of_birth, name,
+                                                     description)
     result_set = db.execute(query)
     id_val = result_set.fetchone()[0]
     for nationality in nationalities:
-        query = "INSERT INTO PersonNationality(Id, nationality)"\
+        query = "INSERT INTO PersonNationality(Id, nationality)" \
                 "VALUES ({},'{}')".format(id_val, nationality)
         db.execute(query)
     for award in awards:
-        query = "INSERT INTO PersonAward(Id, award)"\
+        query = "INSERT INTO PersonAward(Id, award)" \
                 "VALUES ({},'{}')".format(id_val, award)
         db.execute(query)
     for job in jobs:
-            if job == 'Actor':
-                db.execute("INSERT INTO actor(id) VALUES({})".format(id_val))
-            if job == 'Director':
-                db.execute("INSERT INTO director(id) VALUES({})".format(id_val))
-            if job == 'Producer':
-                db.execute("INSERT INTO producer(id) VALUES({})".format(id_val))
+        if job == 'Actor':
+            db.execute("INSERT INTO actor(id) VALUES({})".format(id_val))
+        if job == 'Director':
+            db.execute("INSERT INTO director(id) VALUES({})".format(id_val))
+        if job == 'Producer':
+            db.execute("INSERT INTO producer(id) VALUES({})".format(id_val))
 
 def insert_relation(db, relation, movie_id, person_id):
     if relation[0] == 'Acting':
@@ -60,7 +62,8 @@ def insert_relation(db, relation, movie_id, person_id):
         db.execute(query)
 
 def person_like(db, search_str, role):
-    query = "SELECT person.id, person.name From person, {} where {}.id = person.id AND LOWER(person.Name) LIKE '%%{}%%'".format(role,role,
+    query = "SELECT person.id, person.name From person, {} where {}.id = " \
+        "person.id AND LOWER(person.Name) LIKE '%%{}%%'".format(role, role,
                 search_str.lower())
     result_set = db.execute(query)
     return result_set
@@ -125,15 +128,13 @@ def get_person_awards(db, person_id):
 def add_review(db, movieid, reviewerid, reviewtime, review, rating):
     escaped_review = review.translate(str.maketrans({"'": r"''"}))
     query = "INSERT INTO Review (movieid, reviewerid, reviewtime, review, " \
-        "rating) VALUES({},'{}','{}','{}','{}')".format(movieid, reviewerid,
-                                                        reviewtime,
-                                                        escaped_review,
-                                                        rating)
+        "rating) VALUES({},'{}','{}','{}','{}')".format(
+            movieid, reviewerid, reviewtime, escaped_review, rating)
     db.execute(query)
 
 def add_rating(db, movieid, audienceid, rating):
-    query = "INSERT INTO Rating (movieid, audienceid, rating), "\
-            "VALUES({},'{}','{}')".format(movieid,audienceid,rating)
+    query = "INSERT INTO Rating (movieid, audienceid, rating) "\
+            "VALUES({},'{}','{}')".format(movieid, audienceid, rating)
     db.execute(query)
 
 def get_reviewer_ratings(db, movie_id):
@@ -161,7 +162,6 @@ def get_highest_rated_movie(db):
     for row in result_set:
         movie_id = row.movieid
         numerical_rating = get_avg_reviewer_rating_as_num(db, movie_id)
-        print('id: ', movie_id, 'num_rating: ', numerical_rating)
         if numerical_rating > highest_numerical_rating:
             highest_numerical_rating = numerical_rating
             highest_id = movie_id
@@ -175,22 +175,24 @@ def get_most_reviewed_movie(db):
     return movie_id
 
 def check_in_reviewer(db, username):
-    query = "SELECT * FROM Reviewer where '{}' = reviewer.username".format(username)
+    query = "SELECT * FROM Reviewer where '{}' = reviewer.username".format(
+        username)
     result = db.execute(query)
     if (result.first() == None):
         return False
     return True
 def get_reviewer_reviews(db, reviewer_id):
-    query = "SELECT M.Name AS MovieName, RR.Name AS ReviewerName, R.Rating, "\
+    query = "SELECT M.Name AS MovieName, RR.Name AS ReviewerName, R.Rating, " \
         "R.ReviewTime, R.Review, RR.Location, RR.Organization, R.ReviewerId, "\
-        "M.Id AS MovieId FROM Review AS R INNER JOIN Reviewer AS RR ON " \
-        "R.ReviewerId = RR.Username INNER JOIN Movie AS M ON M.Id = " \
+        "M.Id AS MovieId FROM Review AS R INNER JOIN Reviewer AS RR ON "      \
+        "R.ReviewerId = RR.Username INNER JOIN Movie AS M ON M.Id = "         \
         "R.MovieId WHERE R.ReviewerId = '{}'".format(reviewer_id)
     result_set = db.execute(query)
     return result_set
 
 def check_in_audience(db, username):
-    query = "SELECT * FROM AudienceMember where '{}' = AudienceMember.username".format(username)
+    query = "SELECT * FROM AudienceMember where '{}' = " \
+        "AudienceMember.username".format(username)
     result = db.execute(query)
     if (result.first() == None):
         return False
@@ -204,3 +206,10 @@ def get_reviewer_info(db, reviewer_id):
     query = "SELECT * FROM Reviewer WHERE Username = '{}'".format(reviewer_id)
     result_set = db.execute(query)
     return result_set.first()
+
+def get_actors(db, movie_id):
+    query = "SELECT * FROM Acting INNER JOIN Actor ON ActorId = Id INNER " \
+        "JOIN Person ON Person.Id = Actor.Id WHERE MovieId = {}".format(
+            movie_id)
+    result_set = db.execute(query)
+    return result_set
