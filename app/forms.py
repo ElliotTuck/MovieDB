@@ -9,13 +9,13 @@ class SearchForm(Form):
                                       ('director','director'), ('producer','producer')])
 class Search(Form):
     searchbar = StringField('Search Key word:')
-
+    
 class Relation(Form):
-    relation = SelectMultipleField('Relation', [validators.DataRequired()],
-                                 choices=[('Acting','Acting'),
-                                          ('Directing','Directing'),
-                                          ('Producing','Producing')])
-
+    searchbar = StringField('Search Key word:')
+    searchtype = RadioField('Type:', [validators.DataRequired()],
+                             choices=[('actor','actor'), 
+                                      ('director','director'), 
+                                      ('producer','producer')])
 
 class MovieEntryForm(Form):
     name = StringField('Name', [validators.DataRequired()])
