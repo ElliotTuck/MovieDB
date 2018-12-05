@@ -98,6 +98,8 @@ def show_movie_info(id_val):
     avg_rating = round(sum/count) if count > 0 else -1
     avg_rating = grade_values_inv[avg_rating] if avg_rating != -1 else 'No Reviewer Ratings'
     actors = get_actors(db, id_val)
+    # note: this is not actually guaranteed to return the number of rows in a
+    # select statement! (i.e. this is dangerous to do!)
     actor_count = actors.rowcount
     has_actors = actor_count > 0
     return render_template('movie_info.html', movie_info=movie_info,
