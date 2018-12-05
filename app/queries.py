@@ -51,14 +51,14 @@ def insert_person(db, name, date_of_birth, nationalities, awards, jobs,
         if job == 'Producer':
             db.execute("INSERT INTO producer(id) VALUES({})".format(id_val))
 
-def insert_relation(db, relation, movie_id, person_id):
-    if relation[0] == 'Acting':
+def insert_relation(db, role, movie_id, person_id):
+    if role == 'actor':
         query = "INSERT INTO acting(movieid, actorid) VALUES({},{})".format(movie_id, person_id)
         db.execute(query)
-    if relation[0] == 'Directing':
+    if role == 'director':
         query = "INSERT INTO directing(movieid, directorid) VALUES({},{})".format(movie_id, person_id)
         db.execute(query)
-    if relation[0] == 'Producing':
+    if role == 'producer':
         query = "INSERT INTO producing(movieid, producerid) VALUES({},{})".format(movie_id, person_id)
         db.execute(query)
 

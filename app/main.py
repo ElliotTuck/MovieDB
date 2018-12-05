@@ -79,11 +79,12 @@ def enter_person():
         return redirect(url_for('index'))
     return render_template('enter_person.html', form=form)
 
-@app.route('/enter_acting1', methods=['GET', 'POST'])
+@app.route('/enter_relation1', methods=['GET', 'POST'])
 @login_required
-def enter_acting1():
+def enter_relation1():
     form = Search(request.form)
     if request.method == 'POST' and form.validate():
+        print("Hello")
         search_string = form.searchbar.data
         result_set = movies_like(db, search_string)
         movie_listing = []
@@ -91,7 +92,7 @@ def enter_acting1():
             movie_listing.append((row.id, row.name.strip()))
         return render_template('movie_results.html',
                                    movie_listing=movie_listing)
-    return render_template("enter_acting.html", form=form)
+    return render_template("enter_relation.html", form=form)
 
 @app.route('/movie_detail/<movie_id>')
 @login_required
@@ -106,24 +107,24 @@ def select_movie(movie_id):
                            genres_str=genres_str)
 
 
-@app.route('/enter_acting2/<movie_id>', methods=['GET','POST'])
+@app.route('/enter_relation2/<movie_id>', methods=['GET','POST'])
 @login_required
-def enter_acting2(movie_id):
-    form = Search(request.form)
+def enter_relation2(movie_id):
+    form = Relation(request.form)
     if request.method == 'POST' and form.validate():
         search_string = form.searchbar.data
+        search_type = form.searchtype.data
         ##################
-        search_type = 'actor'
         result = person_like(db,search_string,search_type)
         person_listing = []
         for row in result:
             person_listing.append((row.id, row.name.strip()))
-        return render_template('person_results.html', movie_id = movie_id, person_listing = person_listing)
-    return render_template("enter_acting.html", form=form)
+        return render_template('person_results.html', movie_id = movie_id, role = search_type, person_listing = person_listing)
+    return render_template("enter_relation2.html", form=form)
 
-@app.route('/person_detail/<movie_id>/<person_id>')
+@app.route('/person_detail/<movie_id>/<person_id>/<role>')
 @login_required
-def select_person(movie_id, person_id):
+def select_person(movie_id, person_id, role):
     person_info = get_person_info(db, person_id)
     person_nationality = get_person_nation(db, person_id)
     nationalities = []
@@ -135,18 +136,21 @@ def select_person(movie_id, person_id):
     for row in person_award:
         awards.append(row.award.strip())
         awards_str = ", ".join(awards)
-    return render_template('person_detail.html', movie_id=movie_id, person_id=person_id, person_info=person_info,
+    return render_template('person_detail.html', movie_id=movie_id, person_id=person_id, role = role, person_info=person_info,
      nationalities_str=nationalities_str, awards_str=awards_str)
 
-@app.route('/add_relation/<movie_id>/<person_id>', methods=['GET','POST'])
+@app.route('/add_relation/<movie_id>/<person_id>/<role>', methods=['GET','POST'])
 @login_required
-def add_relation(movie_id, person_id):
-    form = Relation(request.form)
-    if request.method == 'POST' and form.validate():
-        relation = form.relation.data
-        insert_relation(db, relation, movie_id, person_id)
+def add_relation(movie_id, person_id, role):
+    movie = db.execute("SELECT name FROM movie where movie.id = {}".format(movie_id))
+    movie_name = str(movie.first().name)
+    person = db.execute("SELECT name FROM person where person.id = {}".format(person_id))
+    person_name = str(person.first().name)
+    if request.method == 'POST':
+        insert_relation(db, role, movie_id, person_id)
         flash("Add relation successfully!")
-    return render_template("add_relation.html", form=form)
+        return redirect(url_for('index'))
+    return render_template("add_relation.html",  movie_name=movie_name, person_name=person_name, role=role)
 
 
 

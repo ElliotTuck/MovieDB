@@ -2,7 +2,7 @@
 {% block content %}
 <ul>
     {% for (id, name) in person_listing %}
-    <li><a href="/person_detail/{{ movie_id }}/{{ id }}">{{ name }}</a></li>
+    <li><a href="/person_detail/{{ movie_id }}/{{ id }}/{{ role }}">{{ name }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}
