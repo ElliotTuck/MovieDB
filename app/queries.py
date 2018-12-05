@@ -28,6 +28,7 @@ def insert_movie(db, name, release_date, duration, description, budget,
 def insert_person(db, name, date_of_birth, nationalities, awards, jobs,
                   description):
     date_of_birth = "'"+str(date_of_birth) + "'" if date_of_birth else 'NULL'
+    description = description.translate(str.maketrans({"'": "''"}))
     description = "'" + description + "'" if description != '' else 'NULL'
     query = "INSERT INTO Person(Id, dateofbirth, name, description) VALUES " \
         "(DEFAULT, {}, '{}',{}) RETURNING Id".format(date_of_birth, name,

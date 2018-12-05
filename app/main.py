@@ -159,15 +159,8 @@ def show_movie_info(id_val):
         genres.append(row.genre.strip())
     genres_str = ", ".join(genres)
     reviews = get_movie_reviews(db, id_val)
-    reviewer_ratings = get_reviewer_ratings(db, id_val)
-    count = 0
-    sum = 0
     grade_values_inv = {v: k for k, v in grade_values.items()}
-    for reviewer_rating in reviewer_ratings:
-        rating = reviewer_rating.rating.strip()
-        count += 1
-        sum += grade_values[rating]
-    avg_rating = round(sum/count) if count > 0 else -1
+    avg_rating = get_avg_reviewer_rating_as_num(db, id_val)
     avg_rating = grade_values_inv[avg_rating] if avg_rating != -1 else 'No Reviewer Ratings'
     actors = get_actors(db, id_val)
     # note: this is not actually guaranteed to return the number of rows in a
