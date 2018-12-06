@@ -220,3 +220,17 @@ def get_actors(db, movie_id):
             movie_id)
     result_set = db.execute(query)
     return result_set
+
+def get_directors(db, movie_id):
+    query = "SELECT * FROM Directing INNER JOIN Director ON DirectorId = Id INNER " \
+        "JOIN Person ON Person.Id = Director.Id WHERE MovieId = {}".format(
+            movie_id)
+    result_set = db.execute(query)
+    return result_set
+
+def get_producers(db, movie_id):
+    query = "SELECT * FROM Producing INNER JOIN Producer ON ProducerId = Id INNER " \
+        "JOIN Person ON Person.Id = Producer.Id WHERE MovieId = {}".format(
+            movie_id)
+    result_set = db.execute(query)
+    return result_set

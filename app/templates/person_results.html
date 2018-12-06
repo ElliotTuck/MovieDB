@@ -5,4 +5,7 @@
     <li><a href="/person_detail/{{ movie_id }}/{{ id }}/{{ role }}">{{ name }}</a></li>
     {% endfor %}
 </ul>
+{% if has_access %}
+<a class="btn btn-primary btn-lg btn-block mt-3 mb-3" href="/enter_person">Add a person!</a>
+{% endif %}
 {% endblock %}

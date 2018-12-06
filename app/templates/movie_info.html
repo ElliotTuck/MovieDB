@@ -34,6 +34,22 @@
     {% endfor %}
 </ul>
 {% endif %}
+{% if has_directors %}
+<h4 class="text-info">Directors:</h4>
+<ul>
+    {% for director in directors %}
+    <li><a href={{ url_for('show_person_info', id_val=director.id) }}>{{ director.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% if has_producers %}
+<h4 class="text-info">Producers:</h4>
+<ul>
+    {% for producer in producers %}
+    <li><a href={{ url_for('show_person_info', id_val=producer.id) }}>{{ producer.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
 <h4 class="text-primary">Average Reviewer Rating: {{ avg_reviewer_rating }}</h4>
 {% if reviews %}
 <div class="card-columns">
