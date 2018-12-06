@@ -20,16 +20,16 @@ login_manager.login_view = 'login'
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     form = SearchForm(request.form)
+    username = current_user.get_id()
+    has_access = False
+    if (current_user.is_authenticated and
+        not check_in_reviewer(db, username) and
+        not check_in_audience(db, username)):
+        has_access = True
     if request.method == 'POST' and form.validate():
         search_string = form.searchbar.data
         search_type = form.searchtype.data if form.searchtype.data != 'None' \
             else 'NULL'
-        username = current_user.get_id()
-        has_access = False
-        if (current_user.is_authenticated and
-            not check_in_reviewer(db, username) and
-            not check_in_audience(db, username)):
-            has_access = True
         if search_type=='movie':
             result_set = movies_like(db, search_string)
             movie_listing = []
@@ -53,7 +53,8 @@ def index():
         logged_in = True
         username = current_user.get_id()
         flash('Hello, {}!'.format(username))
-    return render_template("index.html", form=form, logged_in=logged_in)
+    return render_template("index.html", form=form, logged_in=logged_in,
+                           has_access=has_access)
 
 @app.route('/enter_movie', methods=['GET', 'POST'])
 @login_required
